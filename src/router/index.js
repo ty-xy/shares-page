@@ -1,11 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Today from '@/components/today'
-import ShoppingCard from '@/components/ShoppingCard'
-import VModel from '@/components/VModel'
-import Slot from '@/components/Slot'
-import NextTick from '@/components/NextTick'
-Vue.use(Router)
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+// import $ from 'jquery'
+
+import Today from '@/components/today/today'
+import BaseLine from '@/components/base-line/base-line'
+import Industry from '@/components/industry'
+import Suggest from '@/components/suggest'
+
+Vue.prototype.$axios = axios
+// app.all('*', function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
+//   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
+//   next()
+// })
+
+Vue.use(Router, VueAxios, axios)
 
 export default new Router({
   routes: [
@@ -19,24 +31,19 @@ export default new Router({
       component: Today
     },
     {
-      path: '/shopping',
-      name: 'ShoppingCard',
-      component: ShoppingCard
+      path: '/base',
+      name: 'base-line',
+      component: BaseLine
     },
     {
-      path: '/vmodel',
-      name: 'VModel',
-      component: VModel
+      path: '/suggest',
+      name: 'suggest',
+      component: Suggest
     },
     {
-      path: '/slot',
-      name: 'Slot',
-      component: Slot
-    },
-    {
-      path: '/',
-      name: 'NextTick',
-      component: NextTick
+      path: '/industry',
+      name: 'industry',
+      component: Industry
     }
   ]
 })

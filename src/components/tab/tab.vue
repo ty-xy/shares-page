@@ -1,23 +1,22 @@
 <template>
   <div class="tab">
     <router-link tag="div" class="tab-item" to= "/index">
-      <span class="tab-link">今日指数</span>
+      <span class="tab-link ">今日指数</span>
     </router-link>
-    <router-link tag="div" class="tab-item" to= "/singer">
+    <router-link tag="div" class="tab-item" to= "/base">
       <span class="tab-link">沪深走势</span>
     </router-link>
-    <router-link tag="div" class="tab-item" to= "/rank">
-      <span class="tab-link" >Pb-pe</span>
-    </router-link>
-    <router-link tag="div" class="tab-item" to= "/search">
+  
+    <router-link tag="div" class="tab-item" to= "/industry">
       <span class="tab-link">行业分析</span>
     </router-link>
-      <router-link tag="div" class="tab-item" to= "/search">
-      <span class="tab-link">铂~金</span>
+    <router-link tag="div" class="tab-item" to= "/rank">
+      <span class="tab-link">经济指标</span>
     </router-link>
-      <router-link tag="div" class="tab-item" to= "/search">
-      <span class="tab-link">黄~金</span>
+      <router-link tag="div" class="tab-item" to= "/suggest">
+      <span class="tab-link">个股推荐</span>
     </router-link>
+    
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -38,9 +37,9 @@
     padding-bottom:5px;
 
 }
-.tab-link>.router-link-active>.tab-link{
+.router-link-active{
           color:  #DDE9FF;
-          border-bottom: 2px solid #DDE9FF;
+          /* border-bottom: 1px solid #DDE9FF; */
 }
          
  /* @import "~common/stylus/variable"
