@@ -1,7 +1,7 @@
 <template>
   <div class="m-header">
     <!-- <div class= "icon"></div> -->
-    <h1 class="text">股票走势图</h1>
+    <h1 class="text">零点财经</h1>
     <router-link tag="div" class="mine" to="/user">
        <i class="icon-mine"></i>
     </router-link>
@@ -17,7 +17,8 @@
     position: relative;
     height: 44px;
     text-align: center;
-    color: #4584FF;
+    /* color: #4584FF; */
+    color:rgb(255, 165, 0);
     font-size: 14px;
   }
    
