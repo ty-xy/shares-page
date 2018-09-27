@@ -28,7 +28,7 @@
    </div>
   
 </template>
-
+ 
 <script>
 import {API_HOST} from '../../util/config'
 export default {

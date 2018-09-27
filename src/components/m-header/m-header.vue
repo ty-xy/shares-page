@@ -17,7 +17,8 @@
     position: relative;
     height: 44px;
     text-align: center;
-    color: #4584FF;
+    /* color: #4584FF; */
+    color:rgb(255, 165, 0);
     font-size: 14px;
   }
    
