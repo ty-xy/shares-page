@@ -96,12 +96,6 @@ export default {
     async getData(userdata,value,url){
          let datalist = await this.$axios.get(url,{params:userdata})
         this.value = await datalist.data
-        this.datax=[]
-        this.series=[]
-        await this.value.forEach((value,i)=>{
-            this.datax.push(value[1])
-            this.series.push(Number(value[2]))
-        })
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById(value))
         this.valuex = this.series.reverse(),
@@ -110,9 +104,7 @@ export default {
             tooltip: {},
             xAxis: {
                 type: 'category',
-                data: this.datax,
-                // interval: '0',    // 显示全部数据，还有auto/>0数字均可
-                // boundaryGap : true,
+                data:  this.value.map((value)=>value[1]),
                 axisLabel: {
                     interval:'auto',
                     rotate:45
@@ -125,18 +117,13 @@ export default {
                  name:"A股",
                  scale:true,
                  type:"value"
-                },
-                {
-                 name:"B股",
-                 scale:true,
-                 type:"value"
                 }
                 
             ],
             series: [
                 {
                 name:"A股",
-                data: this.series,
+                data: this.value.map((value)=>value[2]),
                 type: 'line',
                  yAxisIndex: 0,
                 }
@@ -225,11 +212,11 @@ export default {
                  scale:true,
                  type:"value",
                 },
-                {
-                 name:"B股",
-                 scale:true,
-                 type:"value"
-                }
+                // {
+                //  name:"B股",
+                //  scale:true,
+                //  type:"value"
+                // }
                 
             ],
             series: [
