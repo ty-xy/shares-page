@@ -91,6 +91,7 @@ export default {
      this.drawLine3();
      this.drawLine4();
      this.drawLine5();
+    this.drawLine6();
   },
   methods: {
     async getData(userdata,value,url){
@@ -172,13 +173,67 @@ export default {
         this.getData(userdata,"myChart2",'/api/hszs')
     },
     // 成交量，成交额
-     drawLine3(){
-        var usedata = {
+    async drawLine3(){
+        var userdata = {
                begin_time:this.startTime.time,
                end_time:this.endtime.time
         }
+        let success_done = await this.$axios.get("/api/votur",{params:userdata})
+        let myChart = this.$echarts.init(document.getElementById("myChart3"))
+        myChart.setOption({
+            title: { text:"成交量/成交额"},
+            tooltip: {},
+            xAxis: {
+            type: 'category',
+            data: success_done.data.map((v,i,arr)=> v[0]),
+            // interval: '0',    // 显示全部数据，还有auto/>0数字均可
+            // boundaryGap : true,
+            axisLabel: {
+                interval:'auto',
+                rotate:45
+            },
+            scale:true
+            },
+            yAxis: [
+            // type: 'value'
+            {
+                name:"A股",
+                scale:true,
+                type:"value",
+            },
+            {
+                name:"B股",
+                scale:true,
+                type:"value"
+            }
+
+            ],
+            series: [
+            {
+                name:"A股",
+                data: success_done.data.map((v,i,arr)=> v[1]),
+                type: 'line',
+                itemStyle : {
+                normal : {
+                    color:"blue",
+                    lineStyle:{
+                    color:'blue'
+                    }
+                }
+
+                },
+                yAxisIndex: 0,
+            },
+            {
+                name:"A股",
+                data: success_done.data.map((v,i,arr)=> v[2]),
+                type: 'line',
+                yAxisIndex: 1,
+            }
+            ],
+        });
     },
-    //开户数
+     //开户数
     async drawLine4(){
         let userdata ={
             begin_time:this.startTime.time,
@@ -212,25 +267,25 @@ export default {
                  scale:true,
                  type:"value",
                 },
-                // {
-                //  name:"B股",
-                //  scale:true,
-                //  type:"value"
-                // }
-                
+                {
+                 name:"B股",
+                 scale:true,
+                 type:"value"
+                }
+
             ],
             series: [
                 {
                 name:"A股",
                 data: success_done.data.map((v,i,arr)=> v[1]),
                 type: 'line',
-                itemStyle : {                  
-                    normal : { 
-                        color:"blue",              
-                    lineStyle:{                        
-                        color:'blue'                
-                                }                 
-                    }  
+                itemStyle : {
+                    normal : {
+                        color:"blue",
+                    lineStyle:{
+                        color:'blue'
+                                }
+                    }
 
                 },
                  yAxisIndex: 0,
@@ -244,9 +299,128 @@ export default {
             ],
         });
     },
-    //pb-pe
-    drawLine5(){
-        
+    // pb-pe
+    async drawLine5(){
+        let userdata ={
+          begin_time:this.startTime.time,
+          end_time:this.endtime.time
+        }
+        let success_done = await  this.$axios.get("/api/vcpepb",{params:userdata})
+        //  success_done.data.forEach((value,i)=>{
+        //      console.log(value,i)
+        //  })
+        // this.success_valuex =  await success_done.data.map((v,i)=>{ return v[0]})
+        // console.log(this.success_valuex)
+        let myChart = this.$echarts.init(document.getElementById("myChart5"))
+        myChart.setOption({
+          title: { text:"PE_PB"},
+          tooltip: {},
+          xAxis: {
+            type: 'category',
+            data: success_done.data.map((v,i,arr)=> v[0]),
+            // interval: '0',    // 显示全部数据，还有auto/>0数字均可
+            // boundaryGap : true,
+            axisLabel: {
+              interval:'auto',
+              rotate:45
+            },
+            scale:true
+          },
+          yAxis: [
+            // type: 'value'
+            {
+              name:"A股",
+              scale:true,
+              type:"value",
+            },
+            {
+              name:"B股",
+              scale:true,
+              type:"value"
+            }
+
+          ],
+          series: [
+            {
+              name:"A股",
+              data: success_done.data.map((v,i,arr)=> v[1]),
+              type: 'line',
+              itemStyle : {
+                normal : {
+                  color:"blue",
+                  lineStyle:{
+                    color:'blue'
+                  }
+                }
+
+              },
+              yAxisIndex: 0,
+            },
+            {
+              name:"A股",
+              data: success_done.data.map((v,i,arr)=> v[2]),
+              type: 'line',
+              yAxisIndex: 1,
+            }
+          ],
+        });
+
+      },
+    //流通市值
+    async drawLine6(){
+      let userdata ={
+        begin_time:this.startTime.time,
+        end_time:this.endtime.time
+      }
+      let success_done = await  this.$axios.get("/api/cmkvolue",{params:userdata})
+      //  success_done.data.forEach((value,i)=>{
+      //      console.log(value,i)
+      //  })
+      // this.success_valuex =  await success_done.data.map((v,i)=>{ return v[0]})
+      // console.log(this.success_valuex)
+      let myChart = this.$echarts.init(document.getElementById("myChart6"))
+      myChart.setOption({
+        title: { text:"流通市值"},
+        tooltip: {},
+        xAxis: {
+          type: 'category',
+          data: success_done.data.map((v,i)=> v[0]),
+          // interval: '0',    // 显示全部数据，还有auto/>0数字均可
+          // boundaryGap : true,
+          axisLabel: {
+            interval:'auto',
+            rotate:45
+          },
+          scale:true
+        },
+        yAxis: [
+          // type: 'value'
+          {
+            name:"A股",
+            scale:true,
+            type:"value",
+          }
+
+        ],
+        series: [
+          {
+            name:"A股",
+            data: success_done.data.map((v,i)=> v[1]),
+            type: 'line',
+            itemStyle : {
+              normal : {
+                color:"blue",
+                lineStyle:{
+                  color:'blue'
+                }
+              }
+
+            },
+            yAxisIndex: 0,
+          }
+        ],
+      });
+
     }
    
   },
@@ -255,6 +429,10 @@ export default {
            if(oldValue !== newValue){
                 this.drawLine1()
                 this.drawLine2()
+                this.drawLine3()
+                this.drawLine4()
+                this.drawLine5()
+                this.drawLine6()
            }
      }
   },
