@@ -10,17 +10,37 @@
             <date-picker :date="endtime" :option="option" :limit="limit"></date-picker>
           </div>
        </div>
-        <div id="myChart1" :style="{width: '400px', height: '350px'}"></div>
-        <div id="myChart2" :style="{width: '400px', height: '350px'}"></div>
-        <div id="myChart3" :style="{width: '400px', height: '350px'}"></div>
-        <div id="myChart4" :style="{width: '400px', height: '350px'}"></div>
-        <div id="myChart5" :style="{width: '400px', height: '350px'}"></div>
+        <div id="myChart1" :style="{width: width, height: height}" ref="myEchart"></div>
+        <div id="myChart2" :style="{width: width, height: height}"></div>
+        <div id="myChart3" :style="{width: width, height: height}"></div>
+        <div id="myChart4" :style="{width: width, height: height}"></div>
+        <div id="myChart5" :style="{width: width, height: height}"></div>
+        <div id="myChart6" :style="{width: width, height: height}"></div>
     </div>
 </template>
 <script>
 import DatePicker from 'vue-datepicker/vue-datepicker-es6.vue'
+import {getCurrentDate} from '../../util/common'
 export default {
   name: 'hello',
+  props:{
+           className: {
+             type:String,
+             default:'yourClassName'
+           },
+           id:{
+             type:String,
+             default:'yourID'
+           },
+           width:{
+             type:String,
+             default:'100%'
+           },
+           height:{
+             type:String,
+             default:'350px'
+           }
+    },
   data () {
     return {
         msg: 'Welcome to Your Vue.js App',
@@ -74,33 +94,37 @@ export default {
                 return [];
             }
         }],
-      value:[],
-      valuex:[],
-      success_valuex:[],
-      success_valuey:[],
-      success_series:[]
+        chart1:'',
+        chart2:'',
+        chart3:'',
+        chart4:'',
+        Chart:""
     }
   },
   beforeMount(){
     // this.getData()
-    this.endtime.time = this.getCurrentDate(1)
+
+    this.endtime.time = getCurrentDate(1)
   },
   mounted(){
+     this.init()
      this.drawLine1();
      this.drawLine2();
      this.drawLine3();
      this.drawLine4();
      this.drawLine5();
-    this.drawLine6();
+     this.drawLine6();
   },
-  methods: {
+methods:{
+    
     async getData(userdata,value,url){
          let datalist = await this.$axios.get(url,{params:userdata})
         this.value = await datalist.data
         // 基于准备好的dom，初始化echarts实例
-        let myChart = this.$echarts.init(document.getElementById(value))
+         this.Chart = this.$echarts.init(document.getElementById(value))
+           
         this.valuex = this.series.reverse(),
-        myChart.setOption({
+        this.Chart.setOption({
             title: { text: this.value[0][0] },
             tooltip: {},
             xAxis: {
@@ -139,29 +163,7 @@ export default {
         }
         this.getData(userdata,"myChart1",'/api/hszs')
     },
-    getCurrentDate(format){	
-        var now = new Date();	  
-        var year = now.getFullYear(); //得到年份	 
-        var month = now.getMonth();//得到月份	  
-        var date = now.getDate();//得到日期	  
-        var day = now.getDay();//得到周几	 
-        var hour = now.getHours();//得到小时	  
-        var minu = now.getMinutes();//得到分钟	  
-        var sec = now.getSeconds();//得到秒	  
-        month = month + 1;	 
-        if (month < 10) month = "0" + month;	 
-        if (date < 10) date = "0" + date;	 
-        if (hour < 10) hour = "0" + hour;	  
-        if (minu < 10) minu = "0" + minu;	  
-        if (sec < 10) sec = "0" + sec;	  
-        var time = "";	  
-        //精确到天	  
-        if(format==1){time = year + "-" + month + "-" + date;
-        }	 
-        //精确到分	  
-        else if(format==2){time = year + "-" + month + "-" + date+ " " + hour + ":" + minu + ":" + sec;}	
-        return time;
-    },
+ 
     drawLine2(){
         // 基于准备好的dom，初始化echarts实例
         // var text = this.value[0][0]
@@ -179,8 +181,8 @@ export default {
                end_time:this.endtime.time
         }
         let success_done = await this.$axios.get("/api/votur",{params:userdata})
-        let myChart = this.$echarts.init(document.getElementById("myChart3"))
-        myChart.setOption({
+        this.chart1 = this.$echarts.init(document.getElementById("myChart3"))
+        this.chart1.setOption({
             title: { text:"成交量/成交额"},
             tooltip: {},
             xAxis: {
@@ -195,16 +197,43 @@ export default {
             scale:true
             },
             yAxis: [
-            // type: 'value'
             {
-                name:"A股",
+                name:"成交量",
                 scale:true,
                 type:"value",
+                axisLabel: {
+                    margin: 2,
+                    formatter: function (value, index) {
+                        if (value >= 10000 && value < 10000000) {
+                            value = value / 10000 + "万";
+                        }else if (value >= 10000000&&value<100000000) {
+                            value = value / 100000000 + "千万";
+                        }else if (value>= 100000000){
+                            value = value/100000000+ "亿";
+                        }
+                        return value;
+                        }
+                },
+                grid: {
+                    left: 35
+                },
             },
             {
-                name:"B股",
+                name:"成交额",
                 scale:true,
-                type:"value"
+                type:"value",
+                axisLabel: {
+                    margin: 5,
+                    formatter: function (value, index) {
+                        
+                            value = value/Math.pow(10,12)+ "万亿";
+                        
+                        return value;
+                    }
+                },
+                grid: {
+                    right: 50
+                },
             }
 
             ],
@@ -225,7 +254,7 @@ export default {
                 yAxisIndex: 0,
             },
             {
-                name:"A股",
+                name:"B股",
                 data: success_done.data.map((v,i,arr)=> v[2]),
                 type: 'line',
                 yAxisIndex: 1,
@@ -240,13 +269,8 @@ export default {
             end_time:this.endtime.time
             }
         let success_done = await  this.$axios.get("/api/gpzhnew",{params:userdata})
-        //  success_done.data.forEach((value,i)=>{
-        //      console.log(value,i)
-        //  })
-        // this.success_valuex =  await success_done.data.map((v,i)=>{ return v[0]})
-        // console.log(this.success_valuex)
-        let myChart = this.$echarts.init(document.getElementById("myChart4"))
-        myChart.setOption({
+        this.chart2 = this.$echarts.init(document.getElementById("myChart4"))
+        this.chart2.setOption({
             title: { text:"开户数"},
             tooltip: {},
             xAxis: {
@@ -263,14 +287,25 @@ export default {
             yAxis: [
                 // type: 'value'
                 {
-                 name:"A股",
+                 name:"周开户数",
                  scale:true,
                  type:"value",
+              
                 },
                 {
-                 name:"B股",
-                 scale:true,
-                 type:"value"
+                    name:"累开户数",
+                    scale:true,
+                    type:"value",
+                        axisLabel: {
+                        margin: 5,
+                        formatter: function (value, index) {
+                                value = value/Math.pow(10,4)+ "万";
+                            return value;
+                        }
+                    },
+                    grid: {
+                        right: 50
+                    },
                 }
 
             ],
@@ -291,7 +326,7 @@ export default {
                  yAxisIndex: 0,
                 },
                   {
-                name:"A股",
+                name:"B股",
                 data: success_done.data.map((v,i,arr)=> v[2]),
                 type: 'line',
                  yAxisIndex: 1,
@@ -311,8 +346,8 @@ export default {
         //  })
         // this.success_valuex =  await success_done.data.map((v,i)=>{ return v[0]})
         // console.log(this.success_valuex)
-        let myChart = this.$echarts.init(document.getElementById("myChart5"))
-        myChart.setOption({
+        this.chart3 = this.$echarts.init(document.getElementById("myChart5"))
+        this.chart3.setOption({
           title: { text:"PE_PB"},
           tooltip: {},
           xAxis: {
@@ -372,14 +407,9 @@ export default {
         begin_time:this.startTime.time,
         end_time:this.endtime.time
       }
-      let success_done = await  this.$axios.get("/api/cmkvolue",{params:userdata})
-      //  success_done.data.forEach((value,i)=>{
-      //      console.log(value,i)
-      //  })
-      // this.success_valuex =  await success_done.data.map((v,i)=>{ return v[0]})
-      // console.log(this.success_valuex)
-      let myChart = this.$echarts.init(document.getElementById("myChart6"))
-      myChart.setOption({
+      let success_done = await this.$axios.get("/api/cmkvolue",{params:userdata})
+      this.chart4 = this.$echarts.init(document.getElementById("myChart6"))
+      this.chart4.setOption({
         title: { text:"流通市值"},
         tooltip: {},
         xAxis: {
@@ -421,8 +451,18 @@ export default {
         ],
       });
 
-    }
-   
+    },
+   init() {
+        const self = this;//因为箭头函数会改变this指向，指向windows。所以先把this保存
+        window.onresize = function() {
+            self.Chart.resize();
+            self.chart1.resize();
+            self.chart2.resize();
+            self.chart3.resize();
+            self.chart4.resize();
+        }
+     }
+
   },
    watch: {
     "startTime.time"(newValue, oldValue){
