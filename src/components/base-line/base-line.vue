@@ -122,8 +122,7 @@ methods:{
         this.value = await datalist.data
         // 基于准备好的dom，初始化echarts实例
          this.Chart = this.$echarts.init(document.getElementById(value))
-           
-        this.valuex = this.series.reverse(),
+
         this.Chart.setOption({
             title: { text: this.value[0][0] },
             tooltip: {},
