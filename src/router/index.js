@@ -8,6 +8,7 @@ import Today from '@/components/today/today'
 import BaseLine from '@/components/base-line/base-line'
 import Industry from '@/components/industry'
 import Suggest from '@/components/suggest'
+import Economy from '@/components/economy'
 
 Vue.prototype.$axios = axios
 // app.all('*', function (req, res, next) {
@@ -44,6 +45,12 @@ export default new Router({
       path: '/industry',
       name: 'industry',
       component: Industry
+    },
+    {
+      path: '/rank',
+      name: 'economy',
+      component: Economy
     }
+
   ]
 })

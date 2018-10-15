@@ -1,30 +1,11 @@
 <template> 
    <div>
-       <div >
-           <h2 style="color:rgb(255,256,127)">{{this.value[0]}}</h2>
-           <div class="top-border">
-                <div class="left-side">{{this.value[2]}}</div>
+           <div class="top-border" v-for="item in username" :key="item[0]">
+                <div class="left-side">{{item[0]}}</div>
                 <div class="right-side">
-                    <!-- <div>{{this.value[1]}}</div> -->
-                    <div>成交量:{{this.value[3]}}</div>
-                    <div>成交额:{{this.value[4]}}</div>
-                    <div>换手率:{{this.value[5]}}</div>
+                   {{item[1]}}
                 </div>
            </div>
-       </div>
-       <div>
-       <h2 style="color:rgb(255,256,127)">{{this.sValue[0]}}</h2>
-           <div class="bottom-border top-border">
-                <div class="left-side">{{this.sValue[2]}}</div>
-                <div class="right-side">
-                    <!-- <div>{{this.value[1]}}</div> -->
-                    <div>成交量:{{this.sValue[3]}}</div>
-                    <div>成交额:{{this.sValue[4]}}</div>
-                    <div>换手率:{{this.sValue[5]}}</div>
-                </div>
-           </div>
-           
-       </div>
    </div>
   
 </template>
@@ -36,8 +17,7 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      value:[],
-      sValue:[]
+      username:""
     }
   },
   mounted(){
@@ -45,21 +25,18 @@ export default {
   },
   methods: {
       async todayCount(){
-          const userdata = {
-              name:"上证指数",
-              begin_time:"2017-09-20",
-              end_time:"2017-09-20"
-          }
-          const sData = {
-              name:"深证成指",
-               begin_time:"2017-09-20",
-              end_time:"2017-09-20"
-          }
-          let username = await this.$axios.get('/api/hszs',{params:userdata})
-          let sdata = await this.$axios.get('/api/hszs',{params:sData})
-          this.value = username.data[0]
-          this.sValue = sdata.data[0]
-          console.log(this.value)
+        //   const userdata = {
+        //       name:"上证指数",
+        //       begin_time:"2017-09-20",
+        //       end_time:"2017-09-20"
+        //   }
+        //   const sData = {
+        //       name:"深证成指",
+        //        begin_time:"2017-09-20",
+        //       end_time:"2017-09-20"
+        //   }
+          let data_success = await this.$axios.get('/api/tqindex')
+           this.username = data_success.data
       },
 
   }
@@ -71,13 +48,16 @@ export default {
 h1, h2 {
   font-weight: normal;
 }
-.top-border,.bottom-border{
-   height:180px;
-   width:80%;
-   margin-left:10%;
+.top-border{
+   min-height:30px;
+   width:86%;
+   margin-left:7%;
    border:1px solid rgb(69,39,39);
     margin-top:10px;
     display:flex;
+    padding:0 3px;
+    justify-content: space-between;
+    align-items: center
 }
 ul {
   list-style-type: none;
@@ -85,20 +65,22 @@ ul {
 }
 .left-side{
     /* color:#00ff00; */
-    color:red;
-    height:130px;
-    line-height:130px;
-    border:1px solid;
-    width:40%;
-    font-weight:bold;
-    font-size:24px;
+     color:#cccc00;
+    min-height:20px;
+    line-height:20px;
+    /* border:1px solid; */
+    /* width:50%; */
+    /* font-weight:bold; */
+    font-size:16px;
     margin-right:10px;
 }
-.right-side>div{
+.right-side{
     text-align:left;
     margin-top:10px;
-    color:#cccc00
-
+  
+     color:red;
+     font-weight:bold;
+     font-size: 20px
 }
 li {
   display: inline-block;
